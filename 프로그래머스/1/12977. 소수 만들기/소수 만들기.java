@@ -3,10 +3,10 @@ class Solution {
         int answer = 0;
         int[] is_prime = new int[3001];
         
-        for(int i = 2; i<is_prime.length; i++){
+        for(int i = 2; i*i<is_prime.length; i++){
             if(is_prime[i]==0){
-                for(int j = 2; i*j<is_prime.length; j++){
-                    is_prime[i*j] = 1;
+                for(int j = i*i; j<is_prime.length; j+=i){
+                    is_prime[j] = 1;
                 }
             }
         }
