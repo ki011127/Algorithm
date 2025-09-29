@@ -1,46 +1,42 @@
+import java.util.*;
 class Solution {
-    char[] friends = {'A', 'C', 'F', 'J', 'M', 'N', 'R', 'T'};
-    boolean[] visited = new boolean[8];
-    int answer = 0;
+    static String[] arr = {"A","C","F","J","M","N","R","T"};
+    static String[] result = new String[8];
+    static boolean[] used = new boolean[8];
+    static int answer;
     public int solution(int n, String[] data) {
-        dfs("", data);
+        answer = 0;
+        perm(0,data);
         return answer;
     }
-    
-    public void dfs(String arrange, String[] data){
-        if(arrange.length()==8){
-            if(is_valid(arrange, data)){
-                answer++;
+    static void perm(int cnt, String[] data){
+        if(cnt==8){
+            String s = "";
+            for(int i=0; i<arr.length; i++){
+                s+=result[i];
             }
+            for(int i=0; i<data.length; i++){
+                int start = s.indexOf(data[i].charAt(0));
+                int end = s.indexOf(data[i].charAt(2));
+
+                if(data[i].charAt(3)=='=' && Math.abs(start-end)-1!=data[i].charAt(4)-'0'){
+                    return;
+                }else if(data[i].charAt(3)=='<' && Math.abs(start-end)-1>=data[i].charAt(4)-'0'){
+                    return;
+                }else if(data[i].charAt(3)=='>' && Math.abs(start-end)-1<=data[i].charAt(4)-'0'){
+                    return;
+                }
+            }
+            answer++;
             return;
         }
-        
-        for(int i = 0; i<8; i++){
-            if(!visited[i]){
-                visited[i] = true;
-                dfs(arrange+friends[i], data);
-                visited[i] = false;
+        for(int i=0; i<arr.length; i++){
+            if(!used[i]){
+                used[i] = true;
+                result[cnt] = arr[i];
+                perm(cnt+1, data);
+                used[i] = false;
             }
         }
-    }
-    public boolean is_valid(String arrange,String[] data){
-        for(String s : data){
-            char a = s.charAt(0);
-            char b = s.charAt(2);
-            char op = s.charAt(3);
-            int num = s.charAt(4)-'0';
-            int dist = Math.abs(arrange.indexOf(a)-arrange.indexOf(b)) -1;
-            
-            if(op=='=' && num!=dist){
-                return false;
-            }
-            if(op=='<' && num<=dist){
-                return false;
-            }
-            if(op=='>' && num>=dist){
-                return false;
-            }
-        }
-        return true;
     }
 }
